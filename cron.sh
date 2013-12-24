@@ -7,7 +7,9 @@ set -e
 export MANTA_KEY_ID=55:5e:9a:bc:42:59:df:cb:ad:00:54:f6:59:53:20:83
 export MANTA_USER=isaacs
 export MANTA_URL=https://us-east.manta.joyent.com
+export CDPATH=
 
+cd $(dirname $0)
 base="$(svcs -L npm-lylog)"
 for log in $base $base.*; do
   file="$(basename $log)"
