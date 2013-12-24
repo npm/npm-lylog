@@ -11,7 +11,8 @@
   "license": "ISC",
   "homepage": "https://github.com/isaacs/npm-lylog",
   "dependencies": {
-    "lylog": "~0.1.1"
+    "lylog": "~0.1.1",
+    "request": "*"
   },
   "scripts": {
     "start": "bash lylog.sh"

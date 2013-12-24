@@ -12,19 +12,23 @@ export CDPATH=
 cd $(dirname $0)
 base="$(svcs -L npm-lylog)"
 for log in $base $base.*; do
-  file="$(basename $log)"
-  file="${file//:/_}"
-  cp "$log" "$file"
-  echo -n "" > "$log"
-  node upload.js "$file"
+  if [ -f "$log" ]; then
+    file="$(basename $log)"
+    file="${file//:/_}"
+    cp "$log" "$file"
+    node upload.js "$file"
 
-  gzfile="${file}.gz"
-  gzip -9 <$file >$gzfile
-  d=$(date '+%Y-%m-%d')
-  mput -f $gzfile /isaacs/stor/npm-registry-logs/$d.$gzfile
-  rm -f $gzfile
-  rm $file
-  if ! [ "$log" == "$base" ]; then
-    rm $log
+    gzfile="${file}.gz"
+    gzip -9 <$file >$gzfile
+    d=$(date '+%Y-%m-%d')
+    mput -f $gzfile /isaacs/stor/npm-registry-logs/$d.$gzfile
+    rm -f $gzfile
+    rm $file
+
+    if ! [ "$log" == "$base" ]; then
+      rm $log
+    else
+      echo -n "" > "$log"
+    fi
   fi
 done
