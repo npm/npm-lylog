@@ -39,9 +39,14 @@ LogParse.prototype._parse = function(lines) {
 }
 
 LogParse.prototype._line = function(line) {
-  var p = line.match(fmt)
-  if (!p)
+  if (!line)
     return
+
+  var p = line.match(fmt)
+  if (!p) {
+    console.error('wtf line\n' + JSON.stringify(line))
+    return
+  }
   this.emit('message', {
     date: new Date(p[1]),
     ip: p[2],
@@ -78,14 +83,19 @@ st.pipe(parser)
     if (msg.type !== 'http' ||
         msg.statusCode !== 200 ||
         msg.method !== 'GET' ||
-        !msg.url.match(/tgz$/)) return
+        !msg.url.match(/tgz$/)) {
+      return
+    }
     var file = msg.url.split('/').pop()
     var parts = file.split('-')
     var vt = parts.pop()
     var pkg = parts.join('-')
     vt = vt.split('.')
     var tgz = vt.pop()
-    if (tgz !== 'tgz') return
+    if (tgz !== 'tgz') {
+      console.error('skip, not tgz', msg)
+      return
+    }
     var ver = vt.join('.')
 
     k = k || msg.date.getTime()

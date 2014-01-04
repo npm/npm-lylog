@@ -16,19 +16,22 @@ for log in $base $base.*; do
     file="$(basename $log)"
     file="${file//:/_}"
     cp "$log" "$file"
-    node upload.js "$file"
-
-    gzfile="${file}.gz"
-    gzip -9 <$file >$gzfile
-    d=$(date '+%Y-%m-%d')
-    mput -f $gzfile /isaacs/stor/npm-registry-logs/$d.$gzfile
-    rm -f $gzfile
-    rm $file
-
     if ! [ "$log" == "$base" ]; then
       rm $log
     else
       echo -n "" > "$log"
     fi
+    node upload.js "$file" || ( cp $file $log; rm $file; exit 1 )
+
+    if [ "$(basename "$file" .gz)" == "${file}" ]; then
+      gzfile="${file}.gz"
+      gzip -9 <$file >$gzfile
+    else
+      gzfile="${file}"
+    fi
+    d=$(date '+%Y-%m-%d-%s')
+    mput -f $gzfile /isaacs/stor/npm-registry-logs/$d.$gzfile
+    rm -f $gzfile
+    rm $file
   fi
 done
