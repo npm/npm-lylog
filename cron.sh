@@ -5,7 +5,7 @@
 set -e
 
 export MANTA_KEY_ID=55:5e:9a:bc:42:59:df:cb:ad:00:54:f6:59:53:20:83
-export MANTA_USER=isaacs
+export MANTA_USER=npm
 export MANTA_URL=https://us-east.manta.joyent.com
 export CDPATH=
 
@@ -30,7 +30,7 @@ for log in $base $base.*; do
       gzfile="${file}"
     fi
     d=$(date '+%Y-%m-%d-%s')
-    mput -f $gzfile /isaacs/stor/npm-registry-logs/$d.$gzfile
+    mput -f $gzfile /npm/stor/logs/$d.$gzfile
     rm -f $gzfile
     rm $file
   fi
